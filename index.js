@@ -9,9 +9,9 @@ canvas.style.top = 0;
 canvas.style.right = 0;
 
 const targetCellSize = 30;
-const minMargin = 20;
-let width = Math.floor(canvas.width / targetCellSize);
-let height = Math.floor(canvas.height / targetCellSize);
+const minMargin = 10;
+let width = Math.floor((canvas.width - minMargin*2) / targetCellSize);
+let height = Math.floor((canvas.height - minMargin*2) / targetCellSize);
 let cells = [];
 let walls = [];
 for (let i = 0; i < width; i++) {
@@ -49,8 +49,8 @@ function doDraw() {
   ];
   const stride = [halfStride[0] * 2, halfStride[1] * 2];
   const halfCellSize = [
-    Math.floor(stride[0]*0.45 / 2),
-    Math.floor(stride[1]*0.45 / 2)
+    Math.floor(stride[0]*0.9 / 2),
+    Math.floor(stride[1]*0.9 / 2)
   ];
   const cellSize = [halfCellSize[0] * 2, halfCellSize[1] * 2];
   const marginTL = [
