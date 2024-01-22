@@ -151,10 +151,10 @@ function update() {
     stack.pop();
     const head = stack[stack.length-1];
     cells[head[0]][head[1]] = tick;
-    if      (head[0] < cur[0]) walls[cur[0]][cur[1]][1] = tick;
-    else if (head[1] < cur[1]) walls[cur[0]][cur[1]][0] = tick;
-    else if (head[0] > cur[0]) walls[head[0]][head[1]][1] = tick;
-    else if (head[1] > cur[1]) walls[head[0]][head[1]][0] = tick;
+    if      (head[0] < cur[0]) walls[cur[0]][cur[1]][1] = tick-1;
+    else if (head[1] < cur[1]) walls[cur[0]][cur[1]][0] = tick-1;
+    else if (head[0] > cur[0]) walls[head[0]][head[1]][1] = tick-1;
+    else if (head[1] > cur[1]) walls[head[0]][head[1]][0] = tick-1;
     else console.error("cells in the stack should not be equal");
   } else {
     const idx = Math.floor(Math.random() * neighbors.length);
