@@ -9,7 +9,7 @@ canvas.style.top = 0;
 canvas.style.right = 0;
 
 const targetCellSize = 30;
-const margin = 20;
+const minMargin = 20;
 let width = Math.floor(canvas.width / targetCellSize);
 let height = Math.floor(canvas.height / targetCellSize);
 let cells = [];
@@ -44,8 +44,8 @@ function doDraw() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const halfStride = [
-    Math.floor((canvas.width  - 2*margin) / width / 2),
-    Math.floor((canvas.height - 2*margin) / height / 2),
+    Math.floor((canvas.width  - 2*minMargin) / width / 2),
+    Math.floor((canvas.height - 2*minMargin) / height / 2),
   ];
   const stride = [halfStride[0] * 2, halfStride[1] * 2];
   const halfCellSize = [
@@ -53,17 +53,25 @@ function doDraw() {
     Math.floor(stride[1]*0.45 / 2)
   ];
   const cellSize = [halfCellSize[0] * 2, halfCellSize[1] * 2];
+  const marginTL = [
+    Math.floor((canvas.width - stride[0] * width) / 2),
+    Math.floor((canvas.height - stride[1] * height) / 2)
+  ];
+  const marginBR = [
+    Math.ceil((canvas.width - stride[0] * width) / 2),
+    Math.ceil((canvas.height - stride[1] * height) / 2)
+  ];
 
   // Draw the grid
   ctx.strokeStyle = "#111111";
   ctx.beginPath();
   for (let i = 0; i <= width; i++) {
-    ctx.moveTo(margin + i * stride[0], margin);
-    ctx.lineTo(margin + i * stride[0], margin + height * stride[1]);
+    ctx.moveTo(marginTL[0] + i * stride[0], marginTL[1]);
+    ctx.lineTo(marginBR[0] + i * stride[0], marginBR[1] + height * stride[1]);
   }
   for (let i = 0; i <= height; i++) {
-    ctx.moveTo(margin, margin + i * stride[1]);
-    ctx.lineTo(margin + width * stride[0], margin + i * stride[1]);
+    ctx.moveTo(marginTL[0], marginTL[1] + i * stride[1]);
+    ctx.lineTo(marginBR[0] + width * stride[0], marginBR[1] + i * stride[1]);
   }
   ctx.stroke();
 
@@ -91,8 +99,8 @@ function doDraw() {
   ctx.fillStyle = '#555555';
   for (let i = 0; i < width; i++) {
     for (let j = 0; j < height; j++) {
-      const cellX = i * stride[0] + margin;
-      const cellY = j * stride[1] + margin;
+      const cellX = i * stride[0] + marginTL[0];
+      const cellY = j * stride[1] + marginTL[1];
       if (isAlive(cells[i][j])) { drawCell(cellX, cellY); }
       const wallPair = walls[i][j];
       if (isAlive(wallPair[0])) { drawVWall(cellX, cellY); }
@@ -104,8 +112,8 @@ function doDraw() {
   ctx.fillStyle = '#ff5555';
   for (let i = 0; i < stack.length; i++) {
     const cur = stack[i];
-    const cellX = cur[0] * stride[0] + margin;
-    const cellY = cur[1] * stride[1] + margin;
+    const cellX = cur[0] * stride[0] + marginTL[0];
+    const cellY = cur[1] * stride[1] + marginTL[1];
     if (isAlive(cells[cur[0]][cur[1]])) drawCell(cellX, cellY);
     if (i == stack.length - 1) break;
     const next = stack[i+1];
